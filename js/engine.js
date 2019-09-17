@@ -41,21 +41,33 @@ var Engine = (function(global) {
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
 
-        /* Call our update/render functions, pass along the time delta to
-         * our update function since it may be used for smooth animation.
+        
+        
+
+        /* Use the browser's requestAnimationFrame function to call this
+         * function again as soon as the browser is able to draw another frame.
          */
-        update(dt);
         render();
+
+        if(player && player.lives==0) {
+            drawText("Game Over", 100,450,70);
+            drawText("Press Enter to start again",100,490,30);
+        } else {
+            /* Call our update/render functions, pass along the time delta to
+            * our update function since it may be used for smooth animation.
+            */
+            update(dt);
+        }
+
+        
 
         /* Set our lastTime variable which is used to determine the time delta
          * for the next time this function is called.
          */
         lastTime = now;
 
-        /* Use the browser's requestAnimationFrame function to call this
-         * function again as soon as the browser is able to draw another frame.
-         */
         win.requestAnimationFrame(main);
+        
     }
 
     /* This function does some initial setup that should only occur once,
@@ -79,8 +91,12 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        
+        //checkCollisions();
     }
+
+   
+
 
     /* This is called by the update function and loops through all of the
      * objects within your allEnemies array as defined in app.js and calls
@@ -90,10 +106,15 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
-        allEnemies.forEach(function(enemy) {
-            enemy.update(dt);
-        });
-        player.update();
+        if(allEnemies) {
+            allEnemies.forEach(function(enemy) {
+                enemy.update(dt);
+            });
+        }
+        if(player) {
+            player.update();
+        }
+        
     }
 
     /* This function initially draws the "game level", it will then call
@@ -139,6 +160,7 @@ var Engine = (function(global) {
         }
 
         renderEntities();
+        renderScore();
     }
 
     /* This function is called by the render function and is called on each game
@@ -149,11 +171,19 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-        allEnemies.forEach(function(enemy) {
-            enemy.render();
-        });
+        if(allEnemies) {
+            allEnemies.forEach(function(enemy) {
+                enemy.render();
+            });
+        }
+        if(gems) {
+            gems.forEach(gem => gem.render());
+        }
+        if(player) {
+            player.render();
+        }
 
-        player.render();
+        
     }
 
     /* This function does nothing but it could have been a good place to
@@ -162,6 +192,8 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
+       
+        
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -173,7 +205,8 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/heart.png'
     ]);
     Resources.onReady(init);
 
