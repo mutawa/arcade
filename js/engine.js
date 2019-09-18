@@ -50,8 +50,11 @@ var Engine = (function(global) {
         render();
 
         if(player && player.lives==0) {
-            drawText("Game Over", 100,450,70);
-            drawText("Press Enter to start again",100,490,30);
+            drawText("Game Over", 80,450,70);
+            drawText("Press Enter to start again",70,575,35);
+        } else if(allGems && allGems.length == 0) {
+            drawText("You Win", 80,450,90);
+            drawText("Press Enter to start again",70,575,35);
         } else {
             /* Call our update/render functions, pass along the time delta to
             * our update function since it may be used for smooth animation.
@@ -109,6 +112,11 @@ var Engine = (function(global) {
         if(allEnemies) {
             allEnemies.forEach(function(enemy) {
                 enemy.update(dt);
+            });
+        }
+        if(allGems) {
+            allGems.forEach(gem => {
+                gem.update(dt);
             });
         }
         if(player) {
@@ -171,14 +179,18 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
+
+        if(allGems) {
+            allGems.forEach(gem => gem.render());
+        }
+        
         if(allEnemies) {
             allEnemies.forEach(function(enemy) {
                 enemy.render();
             });
         }
-        if(gems) {
-            gems.forEach(gem => gem.render());
-        }
+        
+
         if(player) {
             player.render();
         }
@@ -206,7 +218,10 @@ var Engine = (function(global) {
         'images/grass-block.png',
         'images/enemy-bug.png',
         'images/char-boy.png',
-        'images/heart.png'
+        'images/heart.png',
+        'images/Gem Blue.png',
+        'images/Gem Green.png',
+        'images/Gem Orange.png',
     ]);
     Resources.onReady(init);
 

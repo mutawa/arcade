@@ -1,18 +1,28 @@
-const lanes = [
-    { y:  60, speed: random(200,300)  }, 
-    { y: 145, speed: random(-200,-400)}, // middle lane is for bugs going to the left
-    { y: 230, speed: random(50,500)    }];
 
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
+
 let allEnemies = [];
-let gems = [];
+let allGems = [];
 let player;
 startGame();
+listenForKeys();
 
 function startGame() {
+    
+    generateEnemies();
+    generateGems();
+    player = new Player();
+
+    
+}
+
+function generateEnemies() {
+    // clear any previous enemies
+    allEnemies = [];
+
     // iterate 3 times because we have 3 lanes
     for(let i=0; i<3; i++) {
         // put two enemies on each lane
@@ -26,31 +36,59 @@ function startGame() {
         allEnemies.push(new Enemy(i));
         
     }
-
-    for(let i=0; i<5; i++) {
-        gems.push(new Gem());
-    }
-
-    player = new Player();
 }
 
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function(e) {
-    var allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down',
-        13: 'enter'
-    };
+function generateGems() {
+    allGems = [];
 
-    if(player) {
-        player.handleInput(allowedKeys[e.keyCode]);
-    } 
-
+    let xPoints = new Set();  // we need unique x positions
+    let yPoints = new Set();  // and unique y positions
     
-});
+    while(xPoints.size < 5 || yPoints.size < 5) {
+        let x = 101 * parseInt(Math.random() * 5) + 50;
+        let y = (parseInt(Math.random() * 5) + 1) * 83 ;
+
+        xPoints.add(x);
+        yPoints.add(y);
+    }
+    // prepare an array for the unique coordinates
+    let points = [];
+
+    let i = 0;
+    for(let x of xPoints) {
+        points[i] = {x:x};
+        i++;
+    }
+    // iterate again to add the y value to the x,y pair
+    i = 0;
+    for(let y of yPoints) {
+        points[i].y = y;
+        i++;
+    }
+    
+    
+    for(let point of points) {
+        allGems.push(new Gem(point.x, point.y));
+    }
+}
+
+function listenForKeys() {
+    document.addEventListener('keyup', function(e) {
+        var allowedKeys = {
+            37: 'left',
+            38: 'up',
+            39: 'right',
+            40: 'down',
+            13: 'enter'
+        };
+    
+        if(player) {
+            player.handleInput(allowedKeys[e.keyCode]);
+        } 
+    
+        
+    });
+}
 
 
 function renderScore() {
@@ -61,12 +99,4 @@ function renderScore() {
         ctx.drawImage(Resources.get('images/heart.png'),x,0,35,50);
     }
     
-}
-
-function drawText(txt,x,y,fontSize = 30) {
-    ctx.font = `${fontSize}px Arial,Tahoma`;
-    ctx.fillStyle = "#eee";
-    ctx.strokeStyle = "#888";
-    ctx.fillText(txt,x,y);
-    ctx.strokeText(txt,x,y);
 }

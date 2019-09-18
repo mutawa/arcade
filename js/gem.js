@@ -1,12 +1,29 @@
 
 class Gem {
-    constructor() {
-        this.x = 101 * parseInt(Math.random() * 6);
-        this.y = 83 * parseInt(Math.random()) + 83;
-        this.color = "blue";
+    static colors = ["Blue", "Orange", "Green"];
+    constructor(x,y) {
+        this.x = x;
+        this.y = y;
+        this.width = 101;
+        this.height = 115;
+        this.angle = 0;
+        let index = parseInt(Math.random() * Gem.colors.length);
+        this.color = Gem.colors[index];
+        this.sprite = `images/Gem ${this.color}.png`;
+    }
+
+    update() {
+        this.angle += 0.01;
     }
 
     render() {
-        ctx.drawImage(Resources.get(`images/Gem ${this.color}.png`),x,0,35,50);
+        // circle(this.x, this.y,30); // for debugging only
+        ctx.save();
+        
+        ctx.translate(this.x,this.y);
+        ctx.scale(0.5,0.5);
+        ctx.rotate(this.angle);
+        ctx.drawImage(Resources.get(this.sprite), -this.width/2, -this.height/2);
+        ctx.restore();
     }
 }
