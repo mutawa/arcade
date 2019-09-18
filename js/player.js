@@ -1,11 +1,7 @@
-
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
 class Player {
     constructor() {
         this.sprite = "images/char-boy.png";
-        this.lives = 4;
+        this.lives = 4; // stores the number of lives
         this.score = 0;
 
         this.width = 80;  // sprite width in pixels
@@ -22,19 +18,34 @@ class Player {
     startOver() {
         this.x = 255;
         this.y = 500;
-
     }
 
     update(dt) {
+
+        // check collisions with Enemies
+        this.checkCollisionWithEnemies();
+        this.checkCollisionWithGems();
+    }
+
+    checkCollisionWithEnemies() {
         allEnemies.forEach(bug => {
-            
             if(this.hits(bug)) {
                 this.lives -= 1;  // remove one life
-                this.startOver();
+                if(this.lives>0) {
+                    this.startOver();
+                }
+                
                 return;  // no need to continue iterating through the other bugs
-
             }
         });
+    }
+
+    checkCollisionWithGems() {
+        // check collisions with Gems.
+        // but since a collision with a gem will result in removing
+        // the gem, then it is better to iterate throgh the array in
+        // reverse order, since removing an element will mess up 
+        // the loop iterator
 
         for(let i = allGems.length -1; i>= 0; i--) {
             let gem = allGems[i];
@@ -42,14 +53,8 @@ class Player {
             if(this.hits(gem)) {
                 allGems.splice(i,1);
                 this.score += 100;
-                if (allGems.length==0) {
-
-                }
             }
         }
-
-        
-
     }
 
     hits(object) {
@@ -73,43 +78,44 @@ class Player {
 
     }
     
+    isStillAlive() {
+        return this.lives > 0;
+    }
+
     handleInput(direction) {
         switch(direction) {
             case 'up':
-                if(this.y>75) {
+                if(this.y>75 && this.isStillAlive()) {
                     this.y -= 85;
                 }
-                
                 break;
             case 'down':
-                if(this.y<500) {
+                if(this.y<500 && this.isStillAlive()) {
                     this.y += 85;
                 }
-                
                 break;
             case 'right':
                 // only move to the right if 
                 // player can go there. avoid
                 // going outside the canvas width
-                if(this.x<400) {
-                    this.x += 100;
+                if(this.x<400 && this.isStillAlive()) {
+                        this.x += 100;
                 }
-                
                 break;
+
             case 'left':
-                if (this.x>55) {
+                if (this.x>55  && this.isStillAlive()) {
                     this.x -= 100;
                 }
-                
                 break;
+
             case 'enter':
-                if(this.lives===0 || allGems.length==0) {
+                // Either the game is over, or all gems have been taken
+                if(!this.isStillAlive() || allGems.length==0) {
                     startGame();
-                    
                 }
                 break;
             default:
-                
                 break;
         }
     }

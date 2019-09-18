@@ -1,20 +1,35 @@
 # Classic Arcade Game Clone Project
 
-## Table of Contents
+This repository is to satisfy the requirements of the 3rd Project from Udacity's Front-End Nanodegree program.
 
-- [Instructions](#instructions)
-- [Contributing](#contributing)
+## How to start the game
 
-## Instructions
+You can access the game using a browser that supports ES6 (Such as Chrome, or Firefox).
 
-Use this [rubric](https://review.udacity.com/#!/rubrics/15/view) for self-checking your submission.
+Open the `index.html` file, and the game shall start.
 
-Make sure the functions you write are **object-oriented** - either class functions (like `Player` and `Enemy`) or class prototype functions such as `Enemy.prototype.checkCollisions`. Also make sure that the keyword `this` is used appropriately within your class and class prototype functions to refer to the object the function is called upon.
+## How to play the game
 
-Your **README.md** file should be updated with instructions on both how to 1. Run and 2. Play your arcade game.
+At the start of the game, the player has 4 lives, represnted by the red hears at the top left corner of the game canvas.
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+Your goal is to move the player around using the arrow keys on the keyboard, and avoid colliding with the enemies (the huge red bugs), while at the same time, collecting the 5 scattered gems over the game canvas.
 
-## Contributing
+Each gem will give the player a score of 100. 
 
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
+If the player collides with an enemy, a life is lost. The game is over when there are no more lives. 
+
+The game is won when all gems have been collected.
+
+In either cases (Game Over, or all gems collected) the game is paused, and a message is displayed to inform the user. 
+
+The game can be re-started by hitting the RETURN key (only if the game is over, or won).
+
+## Details and Changes
+
+I have changed a lot from the starter template by separating the classes of each object in its own file. `Player` class is now in `player.js` file. The same for `Gem` and `Enemy`.  This makes it a lot easier to debug (separation of concern).
+
+I also added another file `util.js` to host all functions that are used by all other classes, and could not logically decide to put them in any particular class.
+
+I made a creative decision by editing the images from the provided template, since they contained too much transparent vertical space, that makes arthemetic collision detection a nightmare. 
+
+I also added gem rotation for the fun of it.

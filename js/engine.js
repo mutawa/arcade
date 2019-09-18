@@ -49,11 +49,13 @@ var Engine = (function(global) {
          */
         render();
 
-        if(player && player.lives==0) {
+        if(player && !player.isStillAlive()) {
             drawText("Game Over", 80,450,70);
+            drawText(`Your Score: ${player.score}`, 150, 500, 30);
             drawText("Press Enter to start again",70,575,35);
         } else if(allGems && allGems.length == 0) {
             drawText("You Win", 80,450,90);
+            drawText(`Your Score: ${player.score} Lives: ${player.lives}`, 70, 500, 30);
             drawText("Press Enter to start again",70,575,35);
         } else {
             /* Call our update/render functions, pass along the time delta to
